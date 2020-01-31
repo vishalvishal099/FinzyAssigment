@@ -1,9 +1,10 @@
 package com.finzy.pages.finzySearch;
 
-import com.finzy.utility.helper.WebDriverRunner;
+import com.finzy.utility.helper.DriverFactory;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.net.MalformedURLException;
@@ -11,14 +12,14 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GoogleSearch extends Navigator {
-
+public class GoogleSearch  {
+   private WebDriver driver;
     private By googleInput = By.name("q");
     private By nextPage = By.xpath("//span[contains(text(),'Next')]");
     private By linkHeading = By.xpath("//h3/parent::a");
 
-    public GoogleSearch() throws MalformedURLException {
-        this.driver = WebDriverRunner.getWebDriver();
+    public GoogleSearch() {
+        this.driver =  DriverFactory.driver();
     }
 
     int appearPosition = 0;

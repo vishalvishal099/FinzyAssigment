@@ -12,6 +12,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 
 /**
  * Class to handle the operations related to the driver
@@ -20,6 +21,27 @@ import java.net.URL;
 public class DriverFactory {
     //Initialization of objects and assigning references to the object.
     ConfigFileReader configFileReader = new ConfigFileReader();
+     private  static HashMap<Long, WebDriver> driverHashMap = new HashMap<>();
+    public static WebDriver driver() {
+        long threadId = Thread.currentThread().getId();
+        if (driverHashMap.get(threadId) != null) {
+            return driverHashMap.get(threadId);
+        }
+           WebDriver driver = null;
+        try {
+             driver = new DriverFactory().getDriver();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        driverHashMap.put(threadId,driver);
+        return driver;
+    }
+
+    public static void closeDriver() {
+        WebDriver curretDriver = driverHashMap.get(Thread.currentThread().getId());
+       curretDriver.close();
+       driverHashMap.remove(Thread.currentThread().getId());
+    }
 
     /**
      * Function to create a browser
@@ -27,7 +49,7 @@ public class DriverFactory {
      * @return browser reference
      * @throws MalformedURLException
      */
-    public WebDriver getDriver() throws MalformedURLException {
+    private WebDriver getDriver() throws MalformedURLException {
         WebDriver driver = null;
         if (configFileReader.getMode().equalsIgnoreCase("grid")) {
             driver = remoteDriver();
