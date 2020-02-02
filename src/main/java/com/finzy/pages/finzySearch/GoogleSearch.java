@@ -7,7 +7,6 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.net.MalformedURLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +37,7 @@ public class GoogleSearch  {
                     break;
                 }
             } else {
-                if (nextPagePresent()) {
+                if (isNextPagePresent()) {
                     foundSearch = getSearchData();
                     if (foundSearch == true) {
                         break;
@@ -48,11 +47,11 @@ public class GoogleSearch  {
 
                 }
             }
-        } while (nextPagePresent());
+        } while (isNextPagePresent());
         return appearPosition;
     }
 
-    private boolean nextPagePresent() {
+    private boolean isNextPagePresent() {
         try {
             driver.findElement(nextPage);
             return true;
