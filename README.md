@@ -2,10 +2,11 @@
  This project is intend  to automate below scenario: 
 ###### 1. Using the ​language ​/ ​test ​framework ​of ​your ​choice, ​create ​tests ​to ​validate if the finzy website ​appears ​first ​in ​a ​Google ​search. The tests should run with multiple keywords of your choice (Eg: peer to peer lending, low-risk investments, etc.).
 ###### 2. If the finzy website does ​not ​appear on the ​first results page, ​the ​test ​should ​find ​out the ​position ​of finzy website in the search ​results.
-##Run the framework:  
+
+## Run the framework 
 Pre-requesite : User should have java & Maven installed in his machine. 
 
-####Project info:  
+#### Project information 
     1.Project configuration: com/finzy/utility/utils/ConfigFileReader
     2.Execution start from here : src/test/java/com/finzy/steps/Hook 
                             this file is do pre-setup all webdriver using config file.
