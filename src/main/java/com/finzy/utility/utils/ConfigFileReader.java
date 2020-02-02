@@ -84,6 +84,12 @@ public class ConfigFileReader {
         else throw new RuntimeException("Mode is not specified in the configuration.propertied file");
     }
 
+    public String getHubURL(){
+        String hubURL = properties.getProperty("HUB_URL");
+        if(hubURL != null)  return hubURL;
+        else throw  new RuntimeException("HUB_URL is not specified in the configuration.propertied file");
+
+    }
 
 }
 

@@ -21,26 +21,27 @@ import java.util.HashMap;
 public class DriverFactory {
     //Initialization of objects and assigning references to the object.
     ConfigFileReader configFileReader = new ConfigFileReader();
-     private  static HashMap<Long, WebDriver> driverHashMap = new HashMap<>();
+    private static HashMap<Long, WebDriver> driverHashMap = new HashMap<>();
+
     public static WebDriver driver() {
         long threadId = Thread.currentThread().getId();
         if (driverHashMap.get(threadId) != null) {
             return driverHashMap.get(threadId);
         }
-           WebDriver driver = null;
+        WebDriver driver = null;
         try {
-             driver = new DriverFactory().getDriver();
+            driver = new DriverFactory().getDriver();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        driverHashMap.put(threadId,driver);
+        driverHashMap.put(threadId, driver);
         return driver;
     }
 
     public static void closeDriver() {
         WebDriver curretDriver = driverHashMap.get(Thread.currentThread().getId());
-       curretDriver.close();
-       driverHashMap.remove(Thread.currentThread().getId());
+        curretDriver.close();
+        driverHashMap.remove(Thread.currentThread().getId());
     }
 
     /**
@@ -69,23 +70,38 @@ public class DriverFactory {
         switch (configFileReader.getBrowser().toLowerCase()) {
 
             case "chrome":
+                WebDriver chromDriver;
                 DesiredCapabilities desiredCapabilities = new DesiredCapabilities().chrome();
-                desiredCapabilities.setCapability(CapabilityType.PROXY,setUpProxy());
-                WebDriver chromDriver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), desiredCapabilities);
+                if (configFileReader.getHttpProxySetStatus()) {
+                    desiredCapabilities.setCapability(CapabilityType.PROXY, setUpProxy());
+                    chromDriver = new RemoteWebDriver(new URL(configFileReader.getHubURL()), desiredCapabilities);
+                } else {
+                    chromDriver = new RemoteWebDriver(new URL(configFileReader.getHubURL()), desiredCapabilities);
+                }
                 configureDriver(chromDriver);
                 return chromDriver;
 
             case "firefox":
+                WebDriver firefoxDriver;
                 DesiredCapabilities ffCapability = new DesiredCapabilities().firefox();
-                ffCapability.setCapability(CapabilityType.PROXY,setUpProxy());
-                WebDriver firefoxDriver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), ffCapability);
+                if (configFileReader.getHttpProxySetStatus()) {
+                    ffCapability.setCapability(CapabilityType.PROXY, setUpProxy());
+                    firefoxDriver = new RemoteWebDriver(new URL(configFileReader.getHubURL()), ffCapability);
+                } else {
+                    firefoxDriver = new RemoteWebDriver(new URL(configFileReader.getHubURL()), ffCapability);
+                }
                 configureDriver(firefoxDriver);
                 return firefoxDriver;
 
             case "ie":
+                WebDriver IEDriver;
                 DesiredCapabilities IEcapability = new DesiredCapabilities().internetExplorer();
-                IEcapability.setCapability(CapabilityType.PROXY,setUpProxy());
-                WebDriver IEDriver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), IEcapability);
+                if (configFileReader.getHttpProxySetStatus()) {
+                    IEcapability.setCapability(CapabilityType.PROXY, setUpProxy());
+                    IEDriver = new RemoteWebDriver(new URL(configFileReader.getHubURL()), IEcapability);
+                } else {
+                    IEDriver = new RemoteWebDriver(new URL(configFileReader.getHubURL()), IEcapability);
+                }
                 configureDriver(IEDriver);
                 return IEDriver;
         }
@@ -94,6 +110,7 @@ public class DriverFactory {
 
     /**
      * Function to check for the os, browser and select the appropriate driver
+     *
      * @return respective browser references according to the required properties
      */
     public WebDriver browser() {
@@ -123,6 +140,7 @@ public class DriverFactory {
 
     /**
      * Function to configure the properties for Chrome browser
+     *
      * @param path
      * @return browser reference
      */
@@ -132,7 +150,7 @@ public class DriverFactory {
         //Setting the proxy for the driver by getting the configuration from configFile.properties
         if (configFileReader.getHttpProxySetStatus()) {
             DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();
-            desiredCapabilities.setCapability(CapabilityType.PROXY,setUpProxy());
+            desiredCapabilities.setCapability(CapabilityType.PROXY, setUpProxy());
             chromeDriver = new ChromeDriver(desiredCapabilities);
 
         } else {
@@ -142,7 +160,9 @@ public class DriverFactory {
         return chromeDriver;
     }
 
-    /** Function to configure the properties of Firefox browser
+    /**
+     * Function to configure the properties of Firefox browser
+     *
      * @param path
      * @return browser reference
      */
@@ -152,7 +172,7 @@ public class DriverFactory {
         WebDriver firefoxDriver = null;
         if (configFileReader.getHttpProxySetStatus()) {
             DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
-            desiredCapabilities.setCapability(CapabilityType.PROXY,setUpProxy());
+            desiredCapabilities.setCapability(CapabilityType.PROXY, setUpProxy());
             firefoxDriver = new FirefoxDriver(desiredCapabilities);
         } else {
             firefoxDriver = new FirefoxDriver();
@@ -164,17 +184,18 @@ public class DriverFactory {
 
     /**
      * Function to configure the properties of Internet Explorer browser
+     *
      * @param path
      * @return reference to the ie driver
      */
     private WebDriver setPropertyAndInitIEDriver(String path) {
         System.setProperty("webdriver.ie.driver", path);
-        WebDriver ieDriver= null;
-        if(configFileReader.getHttpProxySetStatus()){
+        WebDriver ieDriver = null;
+        if (configFileReader.getHttpProxySetStatus()) {
             DesiredCapabilities desiredCapabilities = DesiredCapabilities.internetExplorer();
-            desiredCapabilities.setCapability(CapabilityType.PROXY,setUpProxy());
+            desiredCapabilities.setCapability(CapabilityType.PROXY, setUpProxy());
             ieDriver = new InternetExplorerDriver(desiredCapabilities);
-        }else {
+        } else {
             ieDriver = new InternetExplorerDriver();
         }
         configureDriver(ieDriver);
@@ -190,6 +211,7 @@ public class DriverFactory {
 
     /**
      * Function to make some changes to the object / reference
+     *
      * @param driver
      */
     private void configureDriver(WebDriver driver) {
