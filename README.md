@@ -1,6 +1,6 @@
 # FinzyAssigment
- This project is intend  to automate below scenario: 
-###### 1. Using the ​language ​/ ​test ​framework ​of ​your ​choice, ​create ​tests ​to ​validate if the finzy website ​appears ​first ​in ​a ​Google ​search. The tests should run with multiple keywords of your choice (Eg: peer to peer lending, low-risk investments, etc.).
+ This ​test ​framework has automated below scenarios : 
+###### 1.​create ​tests ​to ​validate if the finzy website ​appears ​first ​in ​a ​Google ​search. The tests should run with multiple keywords of your choice (Eg: peer to peer lending, low-risk investments, etc.).
 ###### 2. If the finzy website does ​not ​appear on the ​first results page, ​the ​test ​should ​find ​out the ​position ​of finzy website in the search ​results.
 
 ## Run the framework 
